@@ -74,7 +74,7 @@ class OwModel(BaseModel):
             # print('LMS:', np.mean((pipe.predict(x_test) - y_test)**2))
             score = pipe.score(x_test.values, y_test.values)
             pipes.append((i, pipe, score))
-            print(f'Score on test set ({type(pipe["clf"]).__name__}):', round(score, 4))
+            print(f'Candidate model {i}: {type(pipe["clf"]).__name__}\n\tScore:', round(score, 4))
         self._model = max(pipes, key=lambda x: x[2])[1]
         if store_model:
             dump(pipe, self._model_path)
