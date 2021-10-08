@@ -1,0 +1,8 @@
+ow_env
+/data/*
+!/data/ow_sr_model.joblib
+!/data/*.pdf
+presentation
+drivers
+geckodriver.log
+__pycache__
