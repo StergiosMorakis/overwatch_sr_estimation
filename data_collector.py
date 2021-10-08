@@ -10,13 +10,12 @@ from selenium.common.exceptions import TimeoutException
 
 class DataCollector:
     def __init__(self):
-        self._cache_filename: str = 'ow_ratings'     # store data in an f"{cache_filename}.csv" file
-        self._adjust_path = lambda filename=None: os.path.join(
+        self._adjust_path = lambda filename=None: os.path.join(     # store data in an "ow_ratings.csv" file
             'data', filename
         ) if isinstance(filename, str) else os.path.join(
-            'data', f'{self._cache_filename}.csv'
+            'data', f'ow_ratings.csv'
         )
-        self._dataset = self._load_data()            # pd.DataFrame if f"{cache_filename}.csv" file exists else None
+        self._dataset = self._load_data()                           # pd.DataFrame if "ow_ratings.csv" file exists else None
 
     def _gen_search_queries(self):
         ''' Search query generator '''
@@ -160,8 +159,7 @@ class DataCollector:
                                     print('Batch cached.\nTtl results:', self._dataset.shape[0], 'Errors:', errors)
                                     retrieved_data, errors = [], 0
                             except Exception as e:
-                                print(f'Failed entry retrieval for username "{query}".')
-                                raise Exception()
+                                raise Exception(f'Failed entry retrieval for username "{query}".')
             except Exception as e:
                 errors += 1
                 print('Error occured -', e)
