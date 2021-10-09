@@ -10,9 +10,9 @@ from selenium.common.exceptions import TimeoutException
 
 class DataCollector:
     def __init__(self):
-        self._adjust_path = lambda filename=None: os.path.join(     # store data in an "ow_ratings.csv" file
-            'data', filename
-        ) if isinstance(filename, str) else os.path.join(
+        self._adjust_path = lambda filename=None: os.path.join(     # return str "data/ow_ratings.csv"
+            'data', filename                                        # if default parameter
+        ) if isinstance(filename, str) else os.path.join(           # else f"data/{filename}"
             'data', f'ow_ratings.csv'
         )
         self._dataset = self._load_data()                           # pd.DataFrame if "ow_ratings.csv" file exists else None
@@ -109,7 +109,7 @@ class DataCollector:
                 except:
                     raise Exception(f'No data could be retrieved for username "{query}".')
                 if results_len:
-                    page_loader_counter = results_len//25
+                    page_loader_counter = results_len//25 # paging length
                     for i in range(page_loader_counter):
                         # scroll to the bottom of the page (for displaying more results)
                         browser.execute_script("window.scrollTo(0, document.body.scrollHeight);")
