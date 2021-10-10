@@ -69,9 +69,9 @@ class DataCollector:
             yield query
 
     def _load_data(self):
-        if os.path.exists(self._adjust_path()):
-            return pd.read_csv(self._adjust_path(), index_col=False)
-        return None
+        data_filepath = self._adjust_path()
+        if os.path.exists(data_filepath):
+            return pd.read_csv(data_filepath, index_col=False)
 
     def _open_browser(self):
         options = Options()
