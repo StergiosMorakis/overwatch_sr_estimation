@@ -24,12 +24,9 @@ class DataCollector:
             self._dataset, pd.DataFrame
         ):
             latest_query = self._dataset['query'].iloc[-1]
-            for query in query_generator:
-                # get iterator to the latest searched term in cache
-                if latest_query != query:
-                    continue
-                else:
-                    break
+            # get iterator to the latest searched term in cache
+            while next(query_generator) != latest_query:
+                continue
         for query in query_generator:
             yield query
 
