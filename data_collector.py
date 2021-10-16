@@ -7,6 +7,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
 from selenium.common.exceptions import TimeoutException
+from itertools import chain
 
 class DataCollector:
     def __init__(self):
@@ -60,10 +61,8 @@ class DataCollector:
             ):
                 yield hero_name.lower()
 
-        for query in _gen_ow_competetive_usernames():
-            yield query
-        for query in _gen_ow_hero_names():
-            yield query
+        yield from _gen_ow_competetive_usernames()
+        yield from _gen_ow_hero_names()
 
     def _load_data(self):
         data_filepath = self._adjust_path()
