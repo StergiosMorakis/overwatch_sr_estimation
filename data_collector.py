@@ -106,7 +106,7 @@ class DataCollector:
                 except:
                     raise Exception(f'No data could be retrieved for username "{query}".')
                 if results_len:
-                    page_loader_counter = results_len//25 # paging length
+                    page_loader_counter = (results_len-1)//25 # paging length
                     for i in range(page_loader_counter):
                         # scroll to the bottom of the page (for displaying more results)
                         browser.execute_script("window.scrollTo(0, document.body.scrollHeight);")
@@ -118,7 +118,7 @@ class DataCollector:
                                 )
                             )
                         )
-                    for i in range(1, results_len + 1):
+                    for i in range(1, results_len+1):
                         console = browser.find_element_by_css_selector(
                             f'.LeaderBoardsTable > tbody:nth-child(2) > tr:nth-child({i}) > td:nth-child(2)'
                         ).text
