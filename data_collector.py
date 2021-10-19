@@ -7,7 +7,6 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
 from selenium.common.exceptions import TimeoutException
-from itertools import chain
 
 class DataCollector:
     def __init__(self):
@@ -40,7 +39,9 @@ class DataCollector:
             df = pd.read_csv(self._adjust_path(filename))
             for competetive_username in (
                 username for username in np.unique(
-                    df.loc[:, [f'my_team_{i}' for i in range(1, 7)]].fillna('').values
+                    df.loc[:, [
+                        f'my_team_{i}' for i in range(1, 7)
+                    ]].fillna('').values
                 ) 
                 if len(username)>1
             ):
