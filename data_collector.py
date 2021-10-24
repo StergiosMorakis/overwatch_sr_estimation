@@ -105,58 +105,57 @@ class DataCollector:
                     )
                 except:
                     raise Exception(f'No data could be retrieved for username "{query}".')
-                if results_len:
-                    page_loader_counter = (results_len-1)//25 # paging length
-                    for i in range(page_loader_counter):
-                        # scroll to the bottom of the page (for displaying more results)
-                        browser.execute_script("window.scrollTo(0, document.body.scrollHeight);")
-                        WebDriverWait(browser, max_delay).until(
-                            EC.element_to_be_clickable(
-                                (
-                                    By.CSS_SELECTOR,
-                                    f".LeaderBoardsTable > tbody:nth-child(2) > tr:nth-child({(i+1)*25+1})"
-                                )
+                page_loader_counter = (results_len-1)//25 # paging length
+                for i in range(page_loader_counter):
+                    # scroll to the bottom of the page (for displaying more results)
+                    browser.execute_script("window.scrollTo(0, document.body.scrollHeight);")
+                    WebDriverWait(browser, max_delay).until(
+                        EC.element_to_be_clickable(
+                            (
+                                By.CSS_SELECTOR,
+                                f".LeaderBoardsTable > tbody:nth-child(2) > tr:nth-child({(i+1)*25+1})"
                             )
                         )
-                    for i in range(1, results_len+1):
-                        console = browser.find_element_by_css_selector(
-                            f'.LeaderBoardsTable > tbody:nth-child(2) > tr:nth-child({i}) > td:nth-child(2)'
-                        ).text
-                        if console == 'PC':
-                            # collect only PC accounts
-                            try:
-                                skill_rating = int(
-                                    browser.find_element_by_css_selector(
-                                        f'.LeaderBoardsTable > tbody:nth-child(2) > tr:nth-child({i}) > td:nth-child(4)'
-                                    ).text
-                                )
-                                ttl_wins = int(
-                                    browser.find_element_by_css_selector(
-                                        (
-                                            'body > div.l-wrap.l-wrap-- > div > div.SearchPlayerLayout > div.Content > table > tbody > '
-                                            f'tr:nth-child({i})'
-                                            ' > td.ContentCell.ContentCell-WinRatio > div > div.WinLose > div.Win'
-                                        )
-                                    ).text[:-1]
-                                )
-                                ttl_losses = int(
-                                    browser.find_element_by_css_selector(
-                                        (
-                                            'body > div.l-wrap.l-wrap-- > div > div.SearchPlayerLayout > div.Content > table > tbody > '
-                                            f'tr:nth-child({i})'
-                                            ' > td.ContentCell.ContentCell-WinRatio > div > div.WinLose > div.Lose'
-                                        )
-                                    ).text[:-1]
-                                )
-                                retrieved_data.append(
-                                    (query, ttl_wins, ttl_losses, skill_rating)
-                                )
-                                if len(retrieved_data) % batch_size == 0:
-                                    self._cache_retrieved_data(retrieved_data)
-                                    print('Batch cached.\nTtl results:', self._dataset.shape[0], 'Errors:', errors)
-                                    retrieved_data, errors = [], 0
-                            except Exception as e:
-                                raise Exception(f'Failed entry retrieval for username "{query}".')
+                    )
+                for i in range(1, results_len+1):
+                    console = browser.find_element_by_css_selector(
+                        f'.LeaderBoardsTable > tbody:nth-child(2) > tr:nth-child({i}) > td:nth-child(2)'
+                    ).text
+                    if console == 'PC':
+                        # collect only PC accounts
+                        try:
+                            skill_rating = int(
+                                browser.find_element_by_css_selector(
+                                    f'.LeaderBoardsTable > tbody:nth-child(2) > tr:nth-child({i}) > td:nth-child(4)'
+                                ).text
+                            )
+                            ttl_wins = int(
+                                browser.find_element_by_css_selector(
+                                    (
+                                        'body > div.l-wrap.l-wrap-- > div > div.SearchPlayerLayout > div.Content > table > tbody > '
+                                        f'tr:nth-child({i})'
+                                        ' > td.ContentCell.ContentCell-WinRatio > div > div.WinLose > div.Win'
+                                    )
+                                ).text[:-1]
+                            )
+                            ttl_losses = int(
+                                browser.find_element_by_css_selector(
+                                    (
+                                        'body > div.l-wrap.l-wrap-- > div > div.SearchPlayerLayout > div.Content > table > tbody > '
+                                        f'tr:nth-child({i})'
+                                        ' > td.ContentCell.ContentCell-WinRatio > div > div.WinLose > div.Lose'
+                                    )
+                                ).text[:-1]
+                            )
+                            retrieved_data.append(
+                                (query, ttl_wins, ttl_losses, skill_rating)
+                            )
+                            if len(retrieved_data) % batch_size == 0:
+                                self._cache_retrieved_data(retrieved_data)
+                                print('Batch cached.\nTtl results:', self._dataset.shape[0], 'Errors:', errors)
+                                retrieved_data, errors = [], 0
+                        except:
+                            raise Exception(f'Failed entry retrieval for username "{query}".')
             except Exception as e:
                 errors += 1
                 print('Error occured -', e)
